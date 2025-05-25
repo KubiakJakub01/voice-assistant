@@ -9,8 +9,8 @@ from agents import function_tool
 from langchain.schema import Document
 from pydantic import BaseModel, Field
 
-from ..core.logger_config import logger
 from ..knowledge_base import get_restaurant_retriever
+from ..logger_config import logger
 
 # ---- Order Management ----
 

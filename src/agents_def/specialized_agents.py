@@ -6,8 +6,13 @@ These agents handle specific aspects of the restaurant experience.
 from agents import Agent
 from agents.extensions.handoff_prompt import prompt_with_handoff_instructions
 
-# Import tools
-from ..tools.gastronomy_tools import get_order_status, make_reservation, place_order
+from ..settings import AGENT_INSTRUCTIONS, AGENT_NAME
+from .gastronomy_tools import (
+    get_order_status,
+    make_reservation,
+    place_order,
+    query_restaurant_knowledge_base,
+)
 
 # Order Taking Agent
 order_agent = Agent(
@@ -79,6 +84,18 @@ reservation_agent = Agent(
     ),
     model='gpt-4o-mini',
     tools=[
+        make_reservation,
+    ],
+)
+
+
+gastronomy_agent = Agent(
+    name=AGENT_NAME,
+    instructions=AGENT_INSTRUCTIONS,
+    tools=[
+        query_restaurant_knowledge_base,
+        place_order,
+        get_order_status,
         make_reservation,
     ],
 )
