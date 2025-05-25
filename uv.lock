@@ -1665,11 +1665,6 @@ dev = [
     { name = "ruff" },
 ]
 
-[package.dev-dependencies]
-dev = [
-    { name = "pylint" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "faiss-cpu", specifier = ">=1.11.0" },
@@ -1686,9 +1681,6 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11.11" },
 ]
 provides-extras = ["dev"]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pylint", specifier = ">=3.3.7" }]
 
 [[package]]
 name = "websockets"
