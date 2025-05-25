@@ -7,15 +7,11 @@ import argparse
 import asyncio
 import os
 
-from agents import Runner
 from dotenv import load_dotenv
 
-# Import the main agent
-from .agents_def.main_gastronomy_agent import gastronomy_agent
-
-# Import the logger
-from .core.logger_config import logger
-from .core.voice_pipeline import setup_voice_pipeline
+from .agents_def import gastronomy_agent
+from .core import TextAgent, VoiceAgent
+from .logger_config import logger
 
 
 async def run_text_mode():
@@ -24,6 +20,8 @@ async def run_text_mode():
     logger.info('\n==== Gastronomy Assistant (Text Mode) ====')
     logger.info("Type your message or 'quit' to exit.")
 
+    text_agent = TextAgent(gastronomy_agent)
+
     while True:
         user_input = input('\nYou: ')
         if user_input.lower() in ['quit', 'exit', 'q']:
@@ -31,9 +29,9 @@ async def run_text_mode():
             break
 
         try:
-            result = await Runner.run(gastronomy_agent, user_input)
+            result = await text_agent(user_input)
             if result:
-                logger.info('\nAssistant: %s', result.final_output)
+                logger.info('\nAssistant: %s', result)
             else:
                 logger.info("\nAssistant: I'm sorry, I couldn't process that.")
         except Exception as e:  # pylint: disable=broad-exception-caught
@@ -42,14 +40,14 @@ async def run_text_mode():
 
 async def run_voice_mode():
     """Run the assistant in voice mode with STT and TTS."""
-    voice_pipeline = setup_voice_pipeline(gastronomy_agent)
+    voice_agent = VoiceAgent(gastronomy_agent)
 
     logger.info('\n==== Gastronomy Voice Assistant ====')
     logger.info('Starting voice interaction mode...')
     logger.info('Speak to the assistant or press Ctrl+C to exit.')
 
     try:
-        await voice_pipeline.start_interactive_session()
+        await voice_agent.start_interactive_session()
     except KeyboardInterrupt:
         logger.info('\nStopping voice assistant...')
     except Exception as e:  # pylint: disable=broad-exception-caught
