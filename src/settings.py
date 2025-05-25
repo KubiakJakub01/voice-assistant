@@ -4,7 +4,7 @@
 from pathlib import Path
 
 # Base directory of the project
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Path to the data file
 DATA_FILE_PATH = BASE_DIR / 'data' / 'data.md'

@@ -4,8 +4,8 @@ from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 
-from .config import settings
-from .core.logger_config import logger
+from .logger_config import logger
+from .settings import DATA_FILE_PATH
 
 
 def load_documents(file_path: str) -> list:
@@ -68,12 +68,12 @@ def get_restaurant_retriever() -> BaseRetriever:
     """
     global _restaurant_retriever  # pylint: disable=global-statement
     if _restaurant_retriever is None:
-        if not settings.DATA_FILE_PATH.exists():
-            raise FileNotFoundError(f'Knowledge base file not found at: {settings.DATA_FILE_PATH}')
+        if not DATA_FILE_PATH.exists():
+            raise FileNotFoundError(f'Knowledge base file not found at: {DATA_FILE_PATH}')
 
-        documents = load_documents(str(settings.DATA_FILE_PATH))
+        documents = load_documents(str(DATA_FILE_PATH))
         if not documents:
-            raise ValueError(f'No documents were loaded from {settings.DATA_FILE_PATH}.')
+            raise ValueError(f'No documents were loaded from {DATA_FILE_PATH}.')
 
         _restaurant_retriever = create_retriever_from_documents(documents)
 
