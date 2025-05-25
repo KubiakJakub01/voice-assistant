@@ -5,6 +5,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 
 from .config import settings
+from .core.logger_config import logger
 
 
 def load_documents(file_path: str) -> list:
@@ -43,7 +44,7 @@ def create_retriever_from_documents(documents: list) -> BaseRetriever:
     try:
         vectorstore = FAISS.from_documents(texts, embeddings)
     except Exception as e:
-        print(f'Error creating FAISS vector store: {e}')
+        logger.exception('Error creating FAISS vector store: %s', e)
         raise
 
     return vectorstore.as_retriever(search_kwargs={'k': 3})  # Retrieve top 3 relevant chunks

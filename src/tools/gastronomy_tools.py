@@ -9,6 +9,7 @@ from agents import function_tool
 from langchain.schema import Document
 from pydantic import BaseModel, Field
 
+from ..core.logger_config import logger
 from ..knowledge_base import get_restaurant_retriever
 
 # ---- Order Management ----
@@ -110,7 +111,7 @@ async def query_restaurant_knowledge_base(query: str) -> str:
         A string containing the relevant information found to answer the query,
         or a message indicating that no specific information was found for that query.
     """
-    print(f"Tool: query_restaurant_knowledge_base attempting to answer query: '{query}'")
+    logger.debug("Tool: query_restaurant_knowledge_base attempting to answer query: '%s'", query)
 
     try:
         retriever = get_restaurant_retriever()
@@ -125,7 +126,9 @@ async def query_restaurant_knowledge_base(query: str) -> str:
         context = '\n\n'.join([doc.page_content for doc in documents])
         return f"Relevant information from the knowledge base for the query '{query}':\n{context}"
     except Exception as e:  # pylint: disable=broad-exception-caught
-        print(f'Error in query_restaurant_knowledge_base: {e}\n{traceback.format_exc()}')
+        logger.exception(
+            'Error in query_restaurant_knowledge_base: %s\n%s', e, traceback.format_exc()
+        )
         return (
             "Sorry, I encountered an error while trying to access the restaurant's information "
             'using the knowledge base.'
