@@ -6,13 +6,13 @@ These agents handle specific aspects of the restaurant experience.
 from agents import Agent
 from agents.extensions.handoff_prompt import prompt_with_handoff_instructions
 
-from ..settings import AGENT_INSTRUCTIONS, AGENT_NAME
-from .gastronomy_tools import (
+from app.agent_tools import (
     get_order_status,
     make_reservation,
     place_order,
     query_restaurant_knowledge_base,
 )
+from app.settings import AGENT_INSTRUCTIONS, AGENT_NAME
 
 # Order Taking Agent
 order_agent = Agent(

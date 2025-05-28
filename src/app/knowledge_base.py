@@ -1,11 +1,14 @@
+from logging import getLogger
+
 from langchain.schema.retriever import BaseRetriever
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 
-from .logger_config import logger
-from .settings import DATA_FILE_PATH
+from app.settings import DATA_FILE_PATH
+
+logger = getLogger(__name__)
 
 
 def load_documents(file_path: str) -> list:

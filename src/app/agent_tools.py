@@ -4,35 +4,21 @@ These tools allow the assistant to perform restaurant-specific actions.
 """
 
 import traceback
+from logging import getLogger
 
 from agents import function_tool
 from langchain.schema import Document
-from pydantic import BaseModel, Field
 
-from ..knowledge_base import get_restaurant_retriever
-from ..logger_config import logger
+from app.knowledge_base import get_restaurant_retriever
+from app.model import OrderItem, Reservation, TableOrder
 
-# ---- Order Management ----
-
-
-class OrderItem(BaseModel):
-    """Model for an order item."""
-
-    item_name: str = Field(description='Name of the food or drink item')
-    quantity: int = Field(description='Quantity of the item', ge=1)
-    special_requests: str | None = Field(None, description='Any special requests for this item')
-
-
-class TableOrder(BaseModel):
-    """Model for storing orders by table."""
-
-    table_number: int
-    items: list[OrderItem] = []
-    status: str = 'pending'  # pending, in-progress, served, paid
+logger = getLogger(__name__)
 
 
 # In-memory store for orders
 _orders: dict[int, TableOrder] = {}
+# In-memory store for reservations
+_reservations = []
 
 
 @function_tool
@@ -61,24 +47,6 @@ def get_order_status(table_number: int) -> str:
     order = _orders[table_number]
     items_list = ', '.join([f'{item.quantity}x {item.item_name}' for item in order.items])
     return f'Order for table {table_number} is {order.status}. Items: {items_list}'
-
-
-# ---- Reservation Management ----
-
-
-class Reservation(BaseModel):
-    """Model for a table reservation."""
-
-    name: str = Field(description='Name for the reservation')
-    date: str = Field(description='Date of reservation (YYYY-MM-DD)')
-    time: str = Field(description='Time of reservation (HH:MM)')
-    guests: int = Field(description='Number of guests', ge=1)
-    contact: str = Field(description='Contact phone number')
-    special_requests: str | None = Field(None, description='Any special requests')
-
-
-# In-memory store for reservations
-_reservations = []
 
 
 @function_tool
