@@ -14,7 +14,6 @@ from app.agent_tools import (
 )
 from app.settings import AGENT_INSTRUCTIONS, AGENT_NAME
 
-# Order Taking Agent
 order_agent = Agent(
     name='Order Taker',
     handoff_description='Specialist for taking food and drink orders',
@@ -50,7 +49,7 @@ order_agent = Agent(
     tools=[place_order, get_order_status],
 )
 
-# Reservation Agent
+
 reservation_agent = Agent(
     name='Reservation Manager',
     handoff_description='Specialist for handling table reservations',
@@ -89,7 +88,7 @@ reservation_agent = Agent(
 )
 
 
-gastronomy_agent = Agent(
+triage_agent = Agent(
     name=AGENT_NAME,
     instructions=AGENT_INSTRUCTIONS,
     tools=[
@@ -99,3 +98,5 @@ gastronomy_agent = Agent(
         make_reservation,
     ],
 )
+
+starting_agent = triage_agent
