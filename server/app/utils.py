@@ -1,11 +1,41 @@
 import base64
 import json
+import logging
 
+import coloredlogs
 import numpy as np
 from agents import Agent, AgentUpdatedStreamEvent, RawResponsesStreamEvent, RunItemStreamEvent
 from agents.voice import AudioInput, VoiceStreamEvent, VoiceStreamEventAudio
 from fastapi import WebSocket
 from openai.types.responses import ResponseTextDeltaEvent
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setFormatter(coloredlogs.ColoredFormatter('%(asctime)s %(levelname)s %(message)s'))
+handler.setLevel(logging.INFO)
+logger.addHandler(handler)
+
+
+def log_debug(*args, **kwargs):
+    """Log an debug message."""
+    logger.debug(*args, **kwargs)
+
+
+def log_info(*args, **kwargs):
+    """Log an info message."""
+    logger.info(*args, **kwargs)
+
+
+def log_warning(*args, **kwargs):
+    """Log a warning message."""
+    logger.warning(*args, **kwargs)
+
+
+def log_error(*args, **kwargs):
+    """Log an error message."""
+    logger.error(*args, **kwargs)
 
 
 def transform_data_to_events(audio_np: np.ndarray) -> dict:
