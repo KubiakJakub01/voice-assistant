@@ -7,14 +7,14 @@ import traceback
 
 from agents import function_tool
 
+from app.crud import create_booking as crud_create_booking
+from app.database import SessionLocal
+from app.items import OrderItem, ReservationInput, TableOrder
 from app.knowledge_base import get_knowledge_base
-from app.model import OrderItem, Reservation, TableOrder
+from app.models import BookingCreate
 from app.utils import log_debug, log_error
 
-# In-memory store for orders
 _orders: dict[int, TableOrder] = {}
-# In-memory store for reservations
-_reservations: list[Reservation] = []
 
 
 @function_tool
@@ -42,13 +42,39 @@ def get_order_status(table_number: int) -> str:
 
 
 @function_tool
-def make_reservation(reservation: Reservation) -> str:
-    """Make a table reservation."""
-    _reservations.append(reservation)
-    return (
-        f'Reservation confirmed for {reservation.name} on {reservation.date} at {reservation.time} '
-        f'for {reservation.guests} guests. We will contact you at {reservation.contact} if needed.'
-    )
+def make_reservation(reservation_input: ReservationInput) -> str:
+    """Make a table reservation using the restaurant's booking system."""
+    log_debug(f'Tool: make_reservation called with input: {reservation_input}')
+
+    db = SessionLocal()
+    try:
+        booking_data = BookingCreate(
+            customer_name=reservation_input.customer_name,
+            customer_phone=reservation_input.customer_phone,
+            customer_email=reservation_input.customer_email,
+            booking_date=reservation_input.booking_date,
+            booking_time=reservation_input.booking_time,
+            party_size=reservation_input.party_size,
+            special_requests=reservation_input.special_requests,
+        )
+
+        created_booking = crud_create_booking(db=db, booking=booking_data)
+
+        return (
+            f'Reservation confirmed for {created_booking.customer_name} '
+            f'on {created_booking.booking_date} at {created_booking.booking_time} '
+            f'for {created_booking.party_size} guests. Booking ID: {created_booking.id}. '
+            f'Status: {created_booking.status.value}. We will contact you at '
+            f'{created_booking.customer_phone} if needed.'
+        )
+    except Exception as e:
+        log_error(f'Error in make_reservation tool: {e}\n{traceback.format_exc()}')
+        return (
+            'Sorry, I encountered an error while trying to make your reservation. '
+            'Please try again later.'
+        )
+    finally:
+        db.close()
 
 
 @function_tool

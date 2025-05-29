@@ -15,9 +15,6 @@ class BookingStatusEnum(str, enum.Enum):
     COMPLETED = 'completed'
 
 
-# --- SQLAlchemy Models ---
-
-
 class RestaurantInfoDB(Base):
     __tablename__ = 'restaurant_info'
 

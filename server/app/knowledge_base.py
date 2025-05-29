@@ -3,7 +3,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal, engine
-from app.models import FAQ, Base, MenuCategory, RestaurantInfo, SpecialOffer
+from app.models import Base, Faq, MenuCategory, RestaurantInfo, SpecialOffer
 from app.utils import log_error, log_info, log_warning
 
 
@@ -90,7 +90,7 @@ class KnowledgeBase:
             self.special_offers.append(offer_dict)
 
     def _load_faq(self):
-        faqs = self.db.query(FAQ).all()
+        faqs = self.db.query(Faq).all()
         if not faqs:
             log_warning('No FAQs found in the database.')
         for faq_item in faqs:
