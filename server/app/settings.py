@@ -32,6 +32,4 @@ AGENT_INSTRUCTIONS = (
 )
 
 # Database settings
-DATABASE_URL = (
-    'sqlite:///../restaurant_data.db'  # SQLite database file will be in the server directory
-)
+DATABASE_URL = 'sqlite:///../restaurant_data.db'
