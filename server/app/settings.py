@@ -7,7 +7,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Path to the data file
-DATA_FILE_PATH = BASE_DIR / 'data' / 'data.md'
+DATA_FILE_PATH = BASE_DIR / 'data' / 'data.json'
 
 # Agent configuration
 AGENT_NAME = 'Poligon Smaków Assistant'

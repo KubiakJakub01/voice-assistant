@@ -20,6 +20,7 @@ dependencies = [
     "sqlalchemy>=2.0.0",
     "unstructured>=0.17.2",
     "markdown>=3.8",
+    "coloredlogs>=15.0.1",
 ]
 
 [dependency-groups]
