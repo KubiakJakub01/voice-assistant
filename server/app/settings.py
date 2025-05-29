@@ -30,3 +30,8 @@ AGENT_INSTRUCTIONS = (
     'If a question is outside the scope of the restaurant (e.g., general knowledge, math problems), '
     'politely state that you are an assistant for Poligon Smaków WAT and can only answer questions about the restaurant.'
 )
+
+# Database settings
+DATABASE_URL = (
+    'sqlite:///../restaurant_data.db'  # SQLite database file will be in the server directory
+)
