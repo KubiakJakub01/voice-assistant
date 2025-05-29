@@ -68,8 +68,9 @@ reservation_agent = Agent(
         2. Confirm the date and time
         3. Ask for the number of guests
         4. Get a contact number
-        5. Note any special requests
-        6. Confirm all details before finalizing
+        5. Get a contact email address
+        6. Note any special requests
+        7. Confirm all details before finalizing
         
         Be friendly, professional, and efficient in your interactions.
         
@@ -90,13 +91,9 @@ reservation_agent = Agent(
 
 triage_agent = Agent(
     name=AGENT_NAME,
-    instructions=AGENT_INSTRUCTIONS,
-    tools=[
-        query_restaurant_database,
-        place_order,
-        get_order_status,
-        make_reservation,
-    ],
+    instructions=prompt_with_handoff_instructions(AGENT_INSTRUCTIONS),
+    tools=[query_restaurant_database],
+    handoffs=[order_agent, reservation_agent],
 )
 
 starting_agent = triage_agent
