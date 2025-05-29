@@ -7,8 +7,10 @@ from app.models import (
     BookingDB,
     BookingStatusEnum,
     BookingUpdate,
+    EmailStr,
     FaqCreate,
     FaqDB,
+    HttpUrl,
     MenuCategoryCreate,
     MenuCategoryDB,
     MenuItemCreate,
@@ -33,7 +35,13 @@ def get_first_restaurant_info(db: Session) -> RestaurantInfoDB | None:
 
 
 def create_restaurant_info(db: Session, info: RestaurantInfoCreate) -> RestaurantInfoDB:
-    db_info = RestaurantInfoDB(**info.model_dump())
+    info_data = info.model_dump()
+    if isinstance(info_data.get('website'), HttpUrl):
+        info_data['website'] = str(info_data['website'])
+    if isinstance(info_data.get('email'), EmailStr):
+        info_data['email'] = str(info_data['email'])
+
+    db_info = RestaurantInfoDB(**info_data)
     db.add(db_info)
     db.commit()
     db.refresh(db_info)
@@ -46,6 +54,11 @@ def update_restaurant_info(
     db_info = get_restaurant_info(db, info_id)
     if db_info:
         update_data = info_update.model_dump(exclude_unset=True)
+        if 'website' in update_data and isinstance(update_data['website'], HttpUrl):
+            update_data['website'] = str(update_data['website'])
+        if 'email' in update_data and isinstance(update_data['email'], EmailStr):
+            update_data['email'] = str(update_data['email'])
+
         for key, value in update_data.items():
             setattr(db_info, key, value)
         db.commit()

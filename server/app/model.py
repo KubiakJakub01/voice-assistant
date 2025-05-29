@@ -17,12 +17,13 @@ class TableOrder(BaseModel):
     status: str = 'pending'  # pending, in-progress, served, paid
 
 
-class Reservation(BaseModel):
-    """Model for a table reservation."""
+class ReservationInput(BaseModel):
+    """Model for providing reservation details to the agent tool."""
 
-    name: str = Field(description='Name for the reservation')
-    date: str = Field(description='Date of reservation (YYYY-MM-DD)')
-    time: str = Field(description='Time of reservation (HH:MM)')
-    guests: int = Field(description='Number of guests', ge=1)
-    contact: str = Field(description='Contact phone number')
-    special_requests: str | None = Field(None, description='Any special requests')
+    customer_name: str = Field(description='Name for the reservation')
+    booking_date: str = Field(description='Date of reservation (YYYY-MM-DD)')
+    booking_time: str = Field(description='Time of reservation (HH:MM)')
+    party_size: int = Field(description='Number of guests', ge=1)
+    customer_phone: str = Field(description='Contact phone number')
+    customer_email: str | None = Field(None, description='Contact email address (optional)')
+    special_requests: str | None = Field(None, description='Any special requests (optional)')
