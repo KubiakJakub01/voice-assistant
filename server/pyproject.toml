@@ -107,7 +107,7 @@ select = [
     # isort
     "I",
 ]
-ignore = []
+ignore = ["B008"] # Ignore B008: Do not perform function calls in argument defaults.
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
