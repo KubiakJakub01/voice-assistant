@@ -14,7 +14,7 @@ class RestaurantInfo(Base):
     email = Column(String)
     website = Column(String)
     cuisine_type = Column(String)
-    payment_methods = Column(String)  # Consider a separate table or JSON if more structured
+    payment_methods = Column(String)
     parking_available = Column(Boolean, default=False)
     summer_garden_available = Column(Boolean, default=False)
     reservations_info = Column(String)
