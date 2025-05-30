@@ -4,7 +4,9 @@ These tools allow the assistant to perform restaurant-specific actions.
 """
 
 import traceback
+from datetime import datetime
 
+import dateparser
 from agents import function_tool
 
 from app.crud import create_booking as crud_create_booking
@@ -113,3 +115,27 @@ def query_restaurant_database(query: str) -> str:
             "Sorry, I encountered an error while trying to access the restaurant's information "
             'from the database.'
         )
+
+
+@function_tool
+def convert_natural_date_to_iso(raw_date: str) -> str | None:
+    """
+    Convert a natural language date to ISO 8601 format (YYYY-MM-DD).
+    This tool is used to convert natural language dates to ISO 8601 format.
+    Example:
+        - "jutro" -> "2025-05-31"
+        - "w przyszły poniedziałek" -> "2025-06-02"
+
+    Args:
+        raw_date: Raw text representation of the date (e.g., "jutro", "w przyszły poniedziałek")
+
+    Returns:
+        Converted date in ISO format, or None if parsing fails
+    """
+    if not raw_date:
+        return None
+
+    today = datetime.today()
+    parsed_date = dateparser.parse(raw_date, settings={'RELATIVE_BASE': today})
+
+    return parsed_date.strftime('%Y_%m_%d') if parsed_date else None

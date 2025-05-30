@@ -7,6 +7,7 @@ from agents import Agent
 from agents.extensions.handoff_prompt import prompt_with_handoff_instructions
 
 from app.agent_tools import (
+    convert_natural_date_to_iso,
     get_order_status,
     make_reservation,
     place_order,
@@ -85,6 +86,7 @@ reservation_agent = Agent(
     model='gpt-4o-mini',
     tools=[
         make_reservation,
+        convert_natural_date_to_iso,
     ],
 )
 

@@ -30,7 +30,8 @@ dev = [
     "ruff>=0.11.11",
     "pylint>=3.3.7",
     "mypy>=1.15.0",
-    "ipykernel>=6.29.5"
+    "ipykernel>=6.29.5",
+    "types-dateparser>=1.2.0.20250516",
 ]
 
 [tool.pylint]
