@@ -21,6 +21,7 @@ dependencies = [
     "unstructured>=0.17.2",
     "markdown>=3.8",
     "coloredlogs>=15.0.1",
+    "dateparser>=1.2.1",
 ]
 
 [dependency-groups]
