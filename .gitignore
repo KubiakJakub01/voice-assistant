@@ -200,3 +200,4 @@ next-env.d.ts
 **/database.db
 **/raport/*
 .cursor/*
+*.db

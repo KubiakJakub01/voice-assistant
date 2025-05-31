@@ -10,7 +10,7 @@ from app.agent_tools import (
     get_order_status,
     make_reservation,
     place_order,
-    query_restaurant_knowledge_base,
+    query_restaurant_database,
 )
 from app.settings import AGENT_INSTRUCTIONS, AGENT_NAME
 
@@ -92,7 +92,7 @@ triage_agent = Agent(
     name=AGENT_NAME,
     instructions=AGENT_INSTRUCTIONS,
     tools=[
-        query_restaurant_knowledge_base,
+        query_restaurant_database,
         place_order,
         get_order_status,
         make_reservation,

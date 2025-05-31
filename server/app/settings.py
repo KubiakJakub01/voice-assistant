@@ -7,7 +7,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Path to the data file
-DATA_FILE_PATH = BASE_DIR / 'data' / 'data.md'
+DATA_FILE_PATH = BASE_DIR / 'data' / 'data.json'
 
 # Agent configuration
 AGENT_NAME = 'Poligon Smaków Assistant'
@@ -30,3 +30,6 @@ AGENT_INSTRUCTIONS = (
     'If a question is outside the scope of the restaurant (e.g., general knowledge, math problems), '
     'politely state that you are an assistant for Poligon Smaków WAT and can only answer questions about the restaurant.'
 )
+
+# Database settings
+DATABASE_URL = 'sqlite:///../restaurant_data.db'
