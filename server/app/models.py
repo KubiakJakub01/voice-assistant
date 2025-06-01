@@ -15,6 +15,14 @@ class BookingStatusEnum(str, enum.Enum):
     COMPLETED = 'completed'
 
 
+class OrderStatusEnum(str, enum.Enum):
+    PENDING = 'pending'
+    PREPARING = 'preparing'
+    READY = 'ready'
+    DELIVERED = 'delivered'
+    CANCELLED = 'cancelled'
+
+
 class RestaurantInfoDB(Base):
     __tablename__ = 'restaurant_info'
 
@@ -102,7 +110,28 @@ class FaqDB(Base):
     answer = Column(Text, nullable=False)
 
 
-# --- Pydantic Schemas ---
+class OrderItemDB(Base):
+    __tablename__ = 'order_items'
+    id = Column(Integer, primary_key=True, index=True)
+    order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+    menu_item_id = Column(Integer, ForeignKey('menu_items.id'), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    special_requests = Column(Text, nullable=True)
+
+    order = relationship('OrderDB', back_populates='items')
+    menu_item = relationship('MenuItemDB')
+
+
+class OrderDB(Base):
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True, index=True)
+    table_number = Column(Integer, nullable=False)
+    status = Column(SAEnum(OrderStatusEnum), default=OrderStatusEnum.PENDING, nullable=False)
+    created_at = Column(String, nullable=False)
+    updated_at = Column(String, nullable=False)
+    notes = Column(Text, nullable=True)
+
+    items = relationship('OrderItemDB', back_populates='order', cascade='all, delete-orphan')
 
 
 class OrmBaseModel(BaseModel):
@@ -175,7 +204,6 @@ class MenuCategory(MenuCategoryBase):
     items: list[MenuItem] = []
 
 
-# Booking Schemas
 class BookingBase(OrmBaseModel):
     customer_name: str
     customer_phone: str
@@ -226,3 +254,40 @@ class FaqCreate(FaqBase):
 
 class Faq(FaqBase):
     id: int
+
+
+class OrderItemBase(OrmBaseModel):
+    menu_item_id: int
+    quantity: int
+    special_requests: str | None = None
+
+
+class OrderItemCreate(OrderItemBase):
+    pass
+
+
+class OrderItem(OrderItemBase):
+    id: int
+    # menu_item: MenuItem # Future enhancement: include full menu item details
+
+
+class OrderBase(OrmBaseModel):
+    table_number: int
+    notes: str | None = None
+
+
+class OrderCreate(OrderBase):
+    items: list[OrderItemCreate]
+
+
+class OrderUpdate(OrderBase):
+    status: OrderStatusEnum | None = None
+    items: list[OrderItemCreate] | None = None
+
+
+class Order(OrderBase):
+    id: int
+    status: OrderStatusEnum
+    created_at: str
+    updated_at: str
+    items: list[OrderItem] = []

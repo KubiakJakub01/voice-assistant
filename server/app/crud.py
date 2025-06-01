@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from app.models import (
@@ -15,6 +17,12 @@ from app.models import (
     MenuCategoryDB,
     MenuItemCreate,
     MenuItemDB,
+    OrderCreate,
+    OrderDB,
+    OrderItemCreate,
+    OrderItemDB,
+    OrderStatusEnum,
+    OrderUpdate,
     RestaurantInfoCreate,
     RestaurantInfoDB,
     SpecialOfferCreate,
@@ -128,6 +136,19 @@ def get_menu_items_by_category(
     return (
         db.query(MenuItemDB)
         .filter(MenuItemDB.category_id == category_id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def get_menu_items_by_name_fuzzy(
+    db: Session, name_query: str, skip: int = 0, limit: int = 10
+) -> list[MenuItemDB]:
+    """Fetches menu items by a fuzzy (case-insensitive, partial) name match."""
+    return (
+        db.query(MenuItemDB)
+        .filter(MenuItemDB.name.ilike(f'%{name_query}%'))
         .offset(skip)
         .limit(limit)
         .all()
@@ -311,3 +332,91 @@ def delete_faq(db: Session, faq_id: int) -> FaqDB | None:
         db.delete(db_faq)
         db.commit()
     return db_faq
+
+
+def get_order(db: Session, order_id: int) -> OrderDB | None:
+    return db.query(OrderDB).filter(OrderDB.id == order_id).first()
+
+
+def get_orders(db: Session, skip: int = 0, limit: int = 100) -> list[OrderDB]:
+    return db.query(OrderDB).offset(skip).limit(limit).all()
+
+
+def create_order(db: Session, order: OrderCreate) -> OrderDB:
+    order_items_db = []
+    for item_create in order.items:
+        order_item_db = OrderItemDB(
+            menu_item_id=item_create.menu_item_id,
+            quantity=item_create.quantity,
+            special_requests=item_create.special_requests,
+        )
+        order_items_db.append(order_item_db)
+
+    db_order = OrderDB(
+        table_number=order.table_number,
+        status=OrderStatusEnum.PENDING,
+        created_at=datetime.utcnow().isoformat(),
+        updated_at=datetime.utcnow().isoformat(),
+        notes=order.notes,
+        items=order_items_db,
+    )
+    db.add(db_order)
+    db.commit()
+    db.refresh(db_order)
+    return db_order
+
+
+def update_order_status(db: Session, order_id: int, status: OrderStatusEnum) -> OrderDB | None:
+    db_order = get_order(db, order_id)
+    if db_order:
+        db_order.status = status
+        db_order.updated_at = datetime.utcnow().isoformat()
+        db.commit()
+        db.refresh(db_order)
+    return db_order
+
+
+def update_order(db: Session, order_id: int, order_update: OrderUpdate) -> OrderDB | None:
+    db_order = get_order(db, order_id)
+    if db_order:
+        update_data = order_update.model_dump(exclude_unset=True)
+
+        if 'items' in update_data and update_data['items'] is not None:
+            for item in db_order.items:
+                db.delete(item)
+            db.commit()
+
+            new_items_db = []
+            for item_create_data in update_data['items']:
+                item_create = (
+                    OrderItemCreate(**item_create_data)
+                    if isinstance(item_create_data, dict)
+                    else item_create_data
+                )
+
+                order_item_db = OrderItemDB(
+                    order_id=db_order.id,
+                    menu_item_id=item_create.menu_item_id,
+                    quantity=item_create.quantity,
+                    special_requests=item_create.special_requests,
+                )
+                new_items_db.append(order_item_db)
+            db_order.items = new_items_db
+
+        update_data.pop('items', None)
+
+        for key, value in update_data.items():
+            setattr(db_order, key, value)
+
+        db_order.updated_at = datetime.utcnow().isoformat()
+        db.commit()
+        db.refresh(db_order)
+    return db_order
+
+
+def delete_order(db: Session, order_id: int) -> OrderDB | None:
+    db_order = get_order(db, order_id)
+    if db_order:
+        db.delete(db_order)
+        db.commit()
+    return db_order

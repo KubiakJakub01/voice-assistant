@@ -2,8 +2,13 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from app.database import SessionLocal, engine
-from app.models import Base, Faq, MenuCategory, RestaurantInfo, SpecialOffer
+from app.database import SessionLocal
+from app.models import (
+    FaqDB,
+    MenuCategoryDB,
+    RestaurantInfoDB,
+    SpecialOfferDB,
+)
 from app.utils import log_error, log_info, log_warning
 
 
@@ -25,7 +30,7 @@ class KnowledgeBase:
         log_info('Data loaded successfully into KnowledgeBase from database.')
 
     def _load_restaurant_info(self):
-        info = self.db.query(RestaurantInfo).first()
+        info = self.db.query(RestaurantInfoDB).first()
         if info:
             self.restaurant_info = {
                 'Nazwa Restauracji': info.name,
@@ -47,7 +52,7 @@ class KnowledgeBase:
             log_warning('Restaurant info not found in the database for KnowledgeBase.')
 
     def _load_menu(self):
-        categories = self.db.query(MenuCategory).all()
+        categories = self.db.query(MenuCategoryDB).all()
         if not categories:
             log_warning('No menu categories found in the database for KnowledgeBase.')
         for category in categories:
@@ -73,7 +78,7 @@ class KnowledgeBase:
             self.menu[category.name] = items_data
 
     def _load_special_offers(self):
-        offers = self.db.query(SpecialOffer).all()
+        offers = self.db.query(SpecialOfferDB).all()
         if not offers:
             log_info('No special offers found in the database. This might be normal.')
         for offer in offers:
@@ -90,7 +95,7 @@ class KnowledgeBase:
             self.special_offers.append(offer_dict)
 
     def _load_faq(self):
-        faqs = self.db.query(Faq).all()
+        faqs = self.db.query(FaqDB).all()
         if not faqs:
             log_warning('No FAQs found in the database.')
         for faq_item in faqs:
@@ -173,9 +178,7 @@ def get_knowledge_base() -> KnowledgeBase:
         log_info('Initializing KnowledgeBase singleton...')
         db_session = SessionLocal()
         try:
-            Base.metadata.create_all(bind=engine)
-
-            if not db_session.query(RestaurantInfo).first():
+            if not db_session.query(RestaurantInfoDB).first():
                 log_warning('Database appears to be empty (no RestaurantInfo found).')
 
             _knowledge_base_instance = KnowledgeBase(db_session=db_session)

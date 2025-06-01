@@ -7,11 +7,13 @@ from app.crud import (
     create_faq,
     create_menu_category,
     create_menu_item,
+    create_order,
     create_restaurant_info,
     create_special_offer,
     delete_booking,
     delete_faq,
     delete_menu_item,
+    delete_order,
     delete_restaurant_info,
     delete_special_offer,
     get_allergen_by_name,
@@ -28,6 +30,8 @@ from app.crud import (
     get_menu_item,
     get_menu_items,
     get_menu_items_by_category,
+    get_order,
+    get_orders,
     get_restaurant_info,
     get_special_offer,
     get_special_offers,
@@ -35,6 +39,8 @@ from app.crud import (
     update_booking_status,
     update_faq,
     update_menu_item,
+    update_order,
+    update_order_status,
     update_restaurant_info,
     update_special_offer,
 )
@@ -52,6 +58,10 @@ from app.models import (
     MenuCategoryCreate,
     MenuItem,
     MenuItemCreate,
+    Order,
+    OrderCreate,
+    OrderStatusEnum,
+    OrderUpdate,
     RestaurantInfo,
     RestaurantInfoCreate,
     SpecialOffer,
@@ -354,3 +364,54 @@ def delete_faq_endpoint(faq_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail='FAQ not found for deletion'
         )
     return deleted_faq
+
+
+@router.post('/orders/', response_model=Order, status_code=status.HTTP_201_CREATED)
+def create_order_endpoint(order: OrderCreate, db: Session = Depends(get_db)):
+    return create_order(db=db, order=order)
+
+
+@router.get('/orders/', response_model=list[Order])
+def read_orders_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    orders = get_orders(db, skip=skip, limit=limit)
+    return orders
+
+
+@router.get('/orders/{order_id}', response_model=Order)
+def read_single_order_endpoint(order_id: int, db: Session = Depends(get_db)):
+    db_order = get_order(db, order_id=order_id)
+    if db_order is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Order not found')
+    return db_order
+
+
+@router.put('/orders/{order_id}', response_model=Order)
+def update_order_endpoint(order_id: int, order_update: OrderUpdate, db: Session = Depends(get_db)):
+    db_order = update_order(db, order_id=order_id, order_update=order_update)
+    if db_order is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Order not found for updating'
+        )
+    return db_order
+
+
+@router.patch('/orders/{order_id}/status', response_model=Order)
+def update_order_status_endpoint(
+    order_id: int, status_update: OrderStatusEnum, db: Session = Depends(get_db)
+):
+    db_order = update_order_status(db, order_id=order_id, status=status_update)
+    if db_order is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Order not found for status update'
+        )
+    return db_order
+
+
+@router.delete('/orders/{order_id}', response_model=Order)
+def delete_order_endpoint(order_id: int, db: Session = Depends(get_db)):
+    db_order = delete_order(db, order_id=order_id)
+    if db_order is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail='Order not found for deletion'
+        )
+    return db_order
