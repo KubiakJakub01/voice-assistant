@@ -681,6 +681,15 @@ wheels = [
 ]
 
 [[package]]
+name = "graphviz"
+version = "0.20.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/83/5a40d19b8347f017e417710907f824915fba411a9befd092e52746b63e9f/graphviz-0.20.3.zip", hash = "sha256:09d6bc81e6a9fa392e7ba52135a9d49f1ed62526f96499325930e87ca1b5925d", size = 256455, upload-time = "2024-03-21T07:50:45.772Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/be/d59db2d1d52697c6adc9eacaf50e8965b6345cc143f671e1ed068818d5cf/graphviz-0.20.3-py3-none-any.whl", hash = "sha256:81f848f2904515d8cd359cc611faba817598d2feaac4027b266aa3eda7b3dde5", size = 47126, upload-time = "2024-03-21T07:50:43.091Z" },
+]
+
+[[package]]
 name = "greenlet"
 version = "3.2.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1611,6 +1620,9 @@ wheels = [
 ]
 
 [package.optional-dependencies]
+viz = [
+    { name = "graphviz" },
+]
 voice = [
     { name = "numpy" },
     { name = "websockets" },
@@ -2792,13 +2804,14 @@ dependencies = [
     { name = "dateparser" },
     { name = "faiss-cpu" },
     { name = "fastapi", extra = ["standard"] },
+    { name = "graphviz" },
     { name = "langchain" },
     { name = "langchain-community" },
     { name = "langchain-openai" },
     { name = "markdown" },
     { name = "numpy" },
     { name = "openai" },
-    { name = "openai-agents", extra = ["voice"] },
+    { name = "openai-agents", extra = ["viz", "voice"] },
     { name = "pre-commit" },
     { name = "pydantic" },
     { name = "python-dotenv" },
@@ -2824,13 +2837,14 @@ requires-dist = [
     { name = "dateparser", specifier = ">=1.2.1" },
     { name = "faiss-cpu", specifier = ">=1.11.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.11" },
+    { name = "graphviz", specifier = ">=0.20.3" },
     { name = "langchain", specifier = ">=0.3.25" },
     { name = "langchain-community", specifier = ">=0.3.24" },
     { name = "langchain-openai", specifier = ">=0.3.18" },
     { name = "markdown", specifier = ">=3.8" },
     { name = "numpy", specifier = ">=2.2.3" },
     { name = "openai", specifier = ">=1.68.2" },
-    { name = "openai-agents", extras = ["voice"], specifier = ">=0.0.16" },
+    { name = "openai-agents", extras = ["viz", "voice"], specifier = ">=0.0.16" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pydantic", specifier = ">=2.11.5" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
