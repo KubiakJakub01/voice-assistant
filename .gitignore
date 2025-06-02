@@ -193,7 +193,6 @@ yarn-error.log*
 next-env.d.ts
 
 # Project specific
-**/data/*
 **/debug/*
 **/logs/*
 **/outputs/*
