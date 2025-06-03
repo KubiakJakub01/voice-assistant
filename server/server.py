@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
+from app import routers as api_routers
 from app.agent_config import starting_agent
 from app.utils import (
     WebsocketHelper,
@@ -32,6 +33,9 @@ load_dotenv(dotenv_path='../.env', override=True)
 app = FastAPI()
 
 logger = getLogger(__name__)
+
+# Include the API router
+app.include_router(api_routers.router, prefix='/api', tags=['API'])
 
 app.add_middleware(
     CORSMiddleware,

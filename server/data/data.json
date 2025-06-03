@@ -1,0 +1,260 @@
+{
+  "restaurant_info": {
+    "name": "Poligon Smaków WAT",
+    "address": "ul. gen. Sylwestra Kaliskiego 2, 00-908 Warszawa",
+    "opening_hours": {
+      "weekday": "12:00 - 22:00",
+      "weekend": "12:00 - 23:00"
+    },
+    "phone": "+48 123 456 789",
+    "email": "kontakt@PoligonSmakówWAT.pl",
+    "website": "www.PoligonSmakówWAT.pl",
+    "cuisine_type": "Polska, regionalna",
+    "payment_methods": "Gotówka, karta kredytowa/debetowa, BLIK",
+    "parking_available": true,
+    "summer_garden_available": true,
+    "reservations_info": "Zalecane, zwłaszcza w weekendy. Można rezerwować telefonicznie lub online."
+  },
+  "menu": [
+    {
+      "category_name": "Przystawki",
+      "items": [
+        {
+          "name": "Śledź w oleju z cebulką",
+          "description": "Klasyczny polski śledź marynowany w oleju z dodatkiem świeżej cebulki i ziół.",
+          "price": 25.0,
+          "allergens": ["Ryby"]
+        },
+        {
+          "name": "Tatar wołowy",
+          "description": "Świeżo mielona polędwica wołowa podawana z żółtkiem, cebulką, ogórkiem kiszonym i grzybkami marynowanymi.",
+          "price": 38.0,
+          "allergens": ["Jaja", "gorczyca"]
+        },
+        {
+          "name": "Oscypek z grilla z żurawiną",
+          "description": "Tradycyjny wędzony ser owczy z Podhala, grillowany i podawany z domową konfiturą żurawinową.",
+          "price": 29.0,
+          "allergens": ["Mleko"]
+        }
+      ]
+    },
+    {
+      "category_name": "Zupy",
+      "items": [
+        {
+          "name": "Żurek staropolski na zakwasie",
+          "description": "Aromatyczny żurek gotowany na domowym zakwasie, z białą kiełbasą, jajkiem i ziemniakami.",
+          "price": 22.0,
+          "allergens": ["Gluten", "jaja", "seler"]
+        },
+        {
+          "name": "Rosół domowy z makaronem",
+          "description": "Klarowny, złocisty rosół gotowany na wiejskiej kurze z domowym makaronem.",
+          "price": 18.0,
+          "allergens": ["Gluten", "seler"]
+        },
+        {
+          "name": "Krem z pomidorów z bazylią",
+          "description": "Aksamitny krem ze świeżych pomidorów, doprawiony świeżą bazylią, podawany z grzankami.",
+          "price": 20.0,
+          "allergens": ["Gluten (grzanki)", "mleko (opcjonalnie śmietana)"]
+        }
+      ]
+    },
+    {
+      "category_name": "Dania Główne",
+      "items": [
+        {
+          "name": "Pierogi ruskie (8 szt.)",
+          "description": "Ręcznie lepione pierogi z farszem z ziemniaków i twarogu, podawane z okrasą z cebulki.",
+          "price": 32.0,
+          "allergens": ["Gluten", "mleko"],
+          "options": "Wegetariańskie"
+        },
+        {
+          "name": "Kotlet schabowy tradycyjny",
+          "description": "Duży, chrupiący kotlet schabowy panierowany, podawany z ziemniakami opiekanymi i kapustą zasmażaną.",
+          "price": 45.0,
+          "allergens": ["Gluten", "jaja"]
+        },
+        {
+          "name": "Gołąbki w sosie pomidorowym",
+          "description": "Dwa gołąbki z mięsem i ryżem, zawijane w liście kapusty, duszone w aromatycznym sosie pomidorowym.",
+          "price": 39.0,
+          "allergens": ["Gluten (w farszu może być bułka tarta)"]
+        },
+        {
+          "name": "Pstrąg z pieca z ziołami",
+          "description": "Cały pstrąg pieczony w piecu z masłem czosnkowym i świeżymi ziołami, podawany z frytkami i surówką.",
+          "price": 55.0,
+          "allergens": ["Ryby"]
+        },
+        {
+          "name": "Placek po węgiersku",
+          "description": "Chrupiący placek ziemniaczany przekładany gulaszem wołowym, podawany z kleksem kwaśnej śmietany.",
+          "price": 48.0,
+          "allergens": ["Gluten", "mleko", "jaja"]
+        },
+        {
+          "name": "Kaczka pieczona z jabłkami",
+          "description": "Połówka kaczki pieczona z jabłkami i majerankiem, podawana z kluskami śląskimi i modrą kapustą.",
+          "price": 65.0,
+          "allergens": []
+        }
+      ]
+    },
+    {
+      "category_name": "Sałatki",
+      "items": [
+        {
+          "name": "Sałatka z grillowanym kurczakiem",
+          "description": "Mieszanka świeżych sałat z grillowanymi kawałkami kurczaka, pomidorkami koktajlowymi, ogórkiem, papryką i sosem winegret.",
+          "price": 35.0,
+          "allergens": []
+        },
+        {
+          "name": "Sałatka grecka",
+          "description": "Pomidory, ogórki, czerwona cebula, oliwki kalamata, ser feta, oregano, oliwa z oliwek.",
+          "price": 30.0,
+          "allergens": ["Mleko (ser feta)"],
+          "options": "Wegetariańskie"
+        }
+      ]
+    },
+    {
+      "category_name": "Desery",
+      "items": [
+        {
+          "name": "Szarlotka na ciepło z lodami",
+          "description": "Domowa szarlotka z jabłkami i cynamonem, podawana na ciepło z gałką lodów waniliowych.",
+          "price": 24.0,
+          "allergens": ["Gluten", "jaja", "mleko"]
+        },
+        {
+          "name": "Sernik tradycyjny",
+          "description": "Puszysty sernik na kruchym spodzie, według tradycyjnej receptury.",
+          "price": 22.0,
+          "allergens": ["Gluten", "jaja", "mleko"]
+        },
+        {
+          "name": "Lody z owocami sezonowymi",
+          "description": "Trzy gałki lodów (do wyboru: waniliowe, czekoladowe, truskawkowe) podawane ze świeżymi owocami sezonowymi i bitą śmietaną.",
+          "price": 20.0,
+          "allergens": ["Mleko"]
+        }
+      ]
+    },
+    {
+      "category_name": "Napoje",
+      "sub_categories": [
+        {
+          "sub_category_name": "Napoje Zimne",
+          "items": [
+            {
+              "name": "Woda mineralna (gazowana/niegazowana) 0.5l",
+              "price_info": "8 PLN"
+            },
+            {
+              "name": "Sok owocowy (pomarańczowy, jabłkowy, porzeczkowy) 0.3l",
+              "price_info": "10 PLN"
+            },
+            {
+              "name": "Lemoniada domowa 0.4l",
+              "price_info": "14 PLN"
+            },
+            {
+              "name": "Coca-Cola, Fanta, Sprite 0.33l",
+              "price_info": "9 PLN"
+            },
+            {
+              "name": "Piwo lane regionalne 0.5l/0.3l",
+              "price_info": "15 PLN / 12 PLN"
+            },
+            {
+              "name": "Piwo butelkowe (różne rodzaje)",
+              "price_info": "od 14 PLN"
+            }
+          ]
+        },
+        {
+          "sub_category_name": "Napoje Gorące",
+          "items": [
+            {
+              "name": "Kawa (espresso, americano, cappuccino, latte)",
+              "price_info": "od 10 PLN"
+            },
+            {
+              "name": "Herbata (czarna, zielona, owocowa)",
+              "price_info": "9 PLN"
+            },
+            {
+              "name": "Czekolada na gorąco",
+              "price_info": "15 PLN"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "special_offers": [
+    {
+      "title": "Lunch Dnia (Poniedziałek - Piątek, 12:00 - 16:00)",
+      "description": "Zupa + Danie Główne z dedykowanego menu lunchowego.",
+      "price_info": "35 PLN",
+      "details": "Codziennie inne zestawy, zapytaj obsługę o dzisiejszą ofertę."
+    },
+    {
+      "title": "Rodzinna Niedziela",
+      "description": "Przy zamówieniu dwóch dań głównych dla dorosłych, danie dla dziecka z menu dziecięcego za 50% ceny.",
+      "validity": "Każda niedziela."
+    },
+    {
+      "title": "Wieczór z muzyką na żywo",
+      "description": "W każdy piątkowy wieczór od 19:00 muzyka na żywo (folk, jazz).",
+      "details": "Specjalna oferta na drinki."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Czy macie opcje wegetariańskie?",
+      "answer": "Tak, oferujemy kilka dań wegetariańskich. W menu są oznaczone jako \"Wegetariańskie\". Polecamy na przykład nasze pierogi ruskie lub sałatkę grecką. Możemy również dostosować niektóre dania na życzenie."
+    },
+    {
+      "question": "Czy macie dania bezglutenowe?",
+      "answer": "Staramy się wychodzić naprzeciw potrzebom naszych gości. Niektóre z naszych dań są naturalnie bezglutenowe, jak na przykład pstrąg z pieca. Prosimy o poinformowanie obsługi o alergii na gluten, abyśmy mogli doradzić i zachować szczególną ostrożność podczas przygotowywania posiłku."
+    },
+    {
+      "question": "Czy mogę zarezerwować stolik?",
+      "answer": "Tak, zachęcamy do rezerwacji stolików, szczególnie w weekendy. Rezerwacji można dokonać telefonicznie pod numerem +48 123 456 789 lub poprzez formularz na naszej stronie internetowej www.smaktradycji.pl."
+    },
+    {
+      "question": "Czy akceptujecie płatności kartą?",
+      "answer": "Tak, akceptujemy płatności gotówką oraz większością kart kredytowych i debetowych, a także płatności BLIK."
+    },
+    {
+      "question": "Czy restauracja jest przyjazna dzieciom?",
+      "answer": "Tak, jesteśmy restauracją przyjazną rodzinom. Posiadamy menu dla dzieci, krzesełka do karmienia oraz kącik zabaw."
+    },
+    {
+      "question": "Czy mogę przyjść z psem?",
+      "answer": "Tak, dobrze wychowane psy są mile widziane w naszym ogródku letnim. Prosimy jednak o trzymanie pupila na smyczy i dbanie o komfort innych gości. Do wnętrza restauracji, ze względów sanitarnych, wstęp mają tylko psy asystujące."
+    },
+    {
+      "question": "Jaki jest czas oczekiwania na dania?",
+      "answer": "Średni czas oczekiwania na dania główne wynosi około 20-30 minut, ponieważ wszystkie potrawy przygotowujemy na świeżo. W przypadku większego ruchu czas ten może się nieznacznie wydłużyć."
+    },
+    {
+      "question": "Czy organizujecie przyjęcia okolicznościowe?",
+      "answer": "Tak, organizujemy różnego rodzaju przyjęcia okolicznościowe, takie jak urodziny, chrzciny, komunie czy spotkania firmowe. Prosimy o kontakt w celu omówienia szczegółów i przygotowania indywidualnej oferty."
+    },
+    {
+      "question": "Gdzie mogę zaparkować samochód?",
+      "answer": "Dla naszych gości dostępny jest bezpłatny parking znajdujący się bezpośrednio przy restauracji."
+    },
+    {
+      "question": "Czy w menu są informacje o alergenach?",
+      "answer": "Tak, przy większości dań w menu staramy się wymieniać główne alergeny. W przypadku szczegółowych pytań dotyczących składników i alergenów, prosimy o kontakt z obsługą, która chętnie udzieli wszelkich informacji."
+    }
+  ]
+} 

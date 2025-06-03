@@ -1,86 +1,293 @@
-from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, Table
+import enum
+
+from pydantic import BaseModel, EmailStr, HttpUrl
+from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, Table, Text
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import relationship
 
 from app.database import Base
 
 
-class RestaurantInfo(Base):
+class BookingStatusEnum(str, enum.Enum):
+    PENDING = 'pending'
+    CONFIRMED = 'confirmed'
+    CANCELLED = 'cancelled'
+    COMPLETED = 'completed'
+
+
+class OrderStatusEnum(str, enum.Enum):
+    PENDING = 'pending'
+    PREPARING = 'preparing'
+    READY = 'ready'
+    DELIVERED = 'delivered'
+    CANCELLED = 'cancelled'
+
+
+class RestaurantInfoDB(Base):
     __tablename__ = 'restaurant_info'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
+    name = Column(String, index=True)
     address = Column(String)
+    opening_hours_weekday = Column(String)
+    opening_hours_weekend = Column(String)
     phone = Column(String)
     email = Column(String)
     website = Column(String)
     cuisine_type = Column(String)
     payment_methods = Column(String)
-    parking_available = Column(Boolean, default=False)
-    summer_garden_available = Column(Boolean, default=False)
-    reservations_info = Column(String)
-    opening_hours_weekday = Column(String)
-    opening_hours_weekend = Column(String)
+    parking_available = Column(Boolean)
+    summer_garden_available = Column(Boolean)
+    reservations_info = Column(Text)
 
 
-class MenuCategory(Base):
+class MenuCategoryDB(Base):
     __tablename__ = 'menu_categories'
-
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
+    items = relationship('MenuItemDB', back_populates='category')
 
-    items = relationship('MenuItem', back_populates='category')
+
+class AllergenDB(Base):
+    __tablename__ = 'allergens'
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    menu_items = relationship(
+        'MenuItemDB', secondary='menu_item_allergen_association', back_populates='allergens'
+    )
 
 
-# Association table for MenuItem and Allergen (many-to-many)
 menu_item_allergen_association = Table(
     'menu_item_allergen_association',
     Base.metadata,
-    Column('menu_item_id', Integer, ForeignKey('menu_items.id')),
-    Column('allergen_id', Integer, ForeignKey('allergens.id')),
+    Column('menu_item_id', Integer, ForeignKey('menu_items.id'), primary_key=True),
+    Column('allergen_id', Integer, ForeignKey('allergens.id'), primary_key=True),
 )
 
 
-class MenuItem(Base):
+class MenuItemDB(Base):
     __tablename__ = 'menu_items'
-
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    description = Column(String, nullable=True)
+    description = Column(Text, nullable=True)
     price = Column(Float)
     category_id = Column(Integer, ForeignKey('menu_categories.id'))
-    options = Column(String, nullable=True)  # e.g., "Wegetariańskie"
+    options = Column(String, nullable=True)
 
-    category = relationship('MenuCategory', back_populates='items')
+    category = relationship('MenuCategoryDB', back_populates='items')
     allergens = relationship(
-        'Allergen', secondary=menu_item_allergen_association, back_populates='menu_items'
+        'AllergenDB', secondary=menu_item_allergen_association, back_populates='menu_items'
     )
 
 
-class Allergen(Base):
-    __tablename__ = 'allergens'
-
+class BookingDB(Base):
+    __tablename__ = 'bookings'
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
+    customer_name = Column(String, nullable=False)
+    customer_phone = Column(String, nullable=False)
+    customer_email = Column(String, nullable=True)
+    booking_date = Column(String, nullable=False)
+    booking_time = Column(String, nullable=False)
+    party_size = Column(Integer, nullable=False)
+    special_requests = Column(Text, nullable=True)
+    status = Column(SAEnum(BookingStatusEnum), default=BookingStatusEnum.PENDING, nullable=False)
 
-    menu_items = relationship(
-        'MenuItem', secondary=menu_item_allergen_association, back_populates='allergens'
-    )
 
-
-class SpecialOffer(Base):
+class SpecialOfferDB(Base):
     __tablename__ = 'special_offers'
-
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String)
+    title = Column(String, index=True, nullable=False)
+    description = Column(Text, nullable=False)
     price_info = Column(String, nullable=True)
     validity = Column(String, nullable=True)
-    details = Column(String, nullable=True)
+    details = Column(Text, nullable=True)
 
 
-class FAQ(Base):
+class FaqDB(Base):
     __tablename__ = 'faqs'
-
     id = Column(Integer, primary_key=True, index=True)
-    question = Column(String, unique=True, index=True)
-    answer = Column(String)
+    question = Column(Text, unique=True, index=True, nullable=False)
+    answer = Column(Text, nullable=False)
+
+
+class OrderItemDB(Base):
+    __tablename__ = 'order_items'
+    id = Column(Integer, primary_key=True, index=True)
+    order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+    menu_item_id = Column(Integer, ForeignKey('menu_items.id'), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    special_requests = Column(Text, nullable=True)
+
+    order = relationship('OrderDB', back_populates='items')
+    menu_item = relationship('MenuItemDB')
+
+
+class OrderDB(Base):
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True, index=True)
+    table_number = Column(Integer, nullable=False)
+    status = Column(SAEnum(OrderStatusEnum), default=OrderStatusEnum.PENDING, nullable=False)
+    created_at = Column(String, nullable=False)
+    updated_at = Column(String, nullable=False)
+    notes = Column(Text, nullable=True)
+
+    items = relationship('OrderItemDB', back_populates='order', cascade='all, delete-orphan')
+
+
+class OrmBaseModel(BaseModel):
+    class Config:
+        from_attributes = True
+
+
+class RestaurantInfoBase(OrmBaseModel):
+    name: str
+    address: str
+    opening_hours_weekday: str
+    opening_hours_weekend: str
+    phone: str
+    email: EmailStr
+    website: HttpUrl | None = None
+    cuisine_type: str
+    payment_methods: str
+    parking_available: bool
+    summer_garden_available: bool
+    reservations_info: str
+
+
+class RestaurantInfoCreate(RestaurantInfoBase):
+    pass
+
+
+class RestaurantInfo(RestaurantInfoBase):
+    id: int
+
+
+class AllergenBase(OrmBaseModel):
+    name: str
+
+
+class AllergenCreate(AllergenBase):
+    pass
+
+
+class Allergen(AllergenBase):
+    id: int
+
+
+class MenuItemBase(OrmBaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    category_id: int
+    options: str | None = None
+
+
+class MenuItemCreate(MenuItemBase):
+    allergen_names: list[str] | None = []
+
+
+class MenuItem(MenuItemBase):
+    id: int
+    allergens: list[Allergen] = []
+
+
+class MenuCategoryBase(OrmBaseModel):
+    name: str
+
+
+class MenuCategoryCreate(MenuCategoryBase):
+    pass
+
+
+class MenuCategory(MenuCategoryBase):
+    id: int
+    items: list[MenuItem] = []
+
+
+class BookingBase(OrmBaseModel):
+    customer_name: str
+    customer_phone: str
+    customer_email: EmailStr | None = None
+    booking_date: str
+    booking_time: str
+    party_size: int
+    special_requests: str | None = None
+
+
+class BookingCreate(BookingBase):
+    pass
+
+
+class BookingUpdate(BookingBase):
+    status: BookingStatusEnum | None = None
+
+
+class Booking(BookingBase):
+    id: int
+    status: BookingStatusEnum
+
+
+class SpecialOfferBase(OrmBaseModel):
+    title: str
+    description: str
+    price_info: str | None = None
+    validity: str | None = None
+    details: str | None = None
+
+
+class SpecialOfferCreate(SpecialOfferBase):
+    pass
+
+
+class SpecialOffer(SpecialOfferBase):
+    id: int
+
+
+class FaqBase(OrmBaseModel):
+    question: str
+    answer: str
+
+
+class FaqCreate(FaqBase):
+    pass
+
+
+class Faq(FaqBase):
+    id: int
+
+
+class OrderItemBase(OrmBaseModel):
+    menu_item_id: int
+    quantity: int
+    special_requests: str | None = None
+
+
+class OrderItemCreate(OrderItemBase):
+    pass
+
+
+class OrderItem(OrderItemBase):
+    id: int
+    # menu_item: MenuItem # Future enhancement: include full menu item details
+
+
+class OrderBase(OrmBaseModel):
+    table_number: int
+    notes: str | None = None
+
+
+class OrderCreate(OrderBase):
+    items: list[OrderItemCreate]
+
+
+class OrderUpdate(OrderBase):
+    status: OrderStatusEnum | None = None
+    items: list[OrderItemCreate] | None = None
+
+
+class Order(OrderBase):
+    id: int
+    status: OrderStatusEnum
+    created_at: str
+    updated_at: str
+    items: list[OrderItem] = []
