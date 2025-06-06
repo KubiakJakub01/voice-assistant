@@ -13,8 +13,8 @@ RUN uv sync --no-cache
 
 COPY . .
 
-RUN python create_db_tables.py
+RUN uv run python create_db_tables.py
 
 EXPOSE 8000
 
-CMD ["python", "server.py"]
+CMD ["uv", "run", "python", "server.py"]
