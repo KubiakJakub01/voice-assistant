@@ -15,7 +15,7 @@ export function useWebsocket({
   url =
     url ??
     process.env.NEXT_PUBLIC_WEBSOCKET_ENDPOINT ??
-    "ws://localhost:8000/ws";
+    "wss://voice-assistant-rap5.onrender.com/ws";
   const [isReady, setIsReady] = useState(false);
   const [history, setHistory] = useState<Message[]>([]);
   const [agentName, setAgentName] = useState<string | null>(null);
@@ -23,15 +23,6 @@ export function useWebsocket({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("WebSocket: resolving URL", {
-      urlParam: url,
-      NEXT_PUBLIC_WEBSOCKET_ENDPOINT: process.env.NEXT_PUBLIC_WEBSOCKET_ENDPOINT,
-      finalUrl:
-        url ??
-        process.env.NEXT_PUBLIC_WEBSOCKET_ENDPOINT ??
-        "ws://localhost:8000/ws",
-    });
-
     const ws = new WebSocket(url);
     ws.addEventListener("open", () => {
       setIsReady(true);
