@@ -46,6 +46,11 @@ app.add_middleware(
 )
 
 
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
+
+
 class Workflow(VoiceWorkflowBase):
     def __init__(self, connection: WebsocketHelper):
         self.connection = connection
